@@ -3,15 +3,15 @@ import java.awt.Polygon;
 
 public class Tree {
 
-    private int xPos;
-    private int yPos;
-    private int size;
-    private int discount;
+    private final int xPos;
+    private final int yPos;
+    private final int size;
+    private final int discount;
     private boolean isChoppedDown;
     private Polygon treeShape;
     private Polygon choppedShape;
     
-    public Tree(int xPos, int yPos, int size) {
+    private Tree(int xPos, int yPos, int size) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.size = size;
@@ -20,13 +20,10 @@ public class Tree {
         initializeShapes();
     }
     
-    public Tree(int xPos, int yPos, int size, int discount) {
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.size = size;
-        this.discount = discount;
-        this.isChoppedDown = false;
+    public static Tree valueOf(int xPos, int yPos, int size) {
+        return new Tree(xPos, yPos, size);
     }
+    
     
     private int getWeightedRandomDiscount() {
         double randomNumber = Math.random();
@@ -64,41 +61,40 @@ public class Tree {
     
     private void initializeShapes() {
         
-        int xRight = xPos + size;
-        int xMiddle = xPos + (size/2);
-        int xOneThird = xPos + (size / 3);
-        int xTwoThirds = xPos + (size * 2 / 3);
-        int xOneFifth = xPos + (size / 5);
-        int xTwoFifth = xPos + (size * 2 / 5);
-        int xThreeFifth = xPos + (size * 3 / 5);
-        int xOneEightth = xPos + (size * 1 / 8);
-        int xSevenEightth = xPos + (size * 7 / 8);
-        int xOneTenth = xPos + (size / 10);
-        int xOneNinth = xPos + (size * 1 / 20);
-        int xEightNinth = xPos + (size * 19 / 20);     
+        Point[] coordinates = {
+                Point.valueOf(xPos, yPos),
+                Point.valueOf(xPos + (size * 2 / 5), yPos - (size / 10)),
+                Point.valueOf(xPos + (size * 2 / 5), yPos),
+                Point.valueOf(xPos + (size * 3 / 5), yPos),
+                Point.valueOf(xPos + (size * 3 / 5), yPos - (size / 10)),
+                Point.valueOf(xPos + size, yPos),
+                Point.valueOf(xPos + (size * 2 / 3), yPos - (size / 3)),
+                Point.valueOf(xPos + (size * 19 / 20), yPos - (size / 5)),
+                Point.valueOf(xPos + (size * 2 / 3), yPos - (size * 2 / 3)),       
+                Point.valueOf(xPos + (size * 7 / 8), yPos - (size / 2)),
+                Point.valueOf(xPos + (size / 2), yPos - size),
+                Point.valueOf(xPos + (size * 1 / 8), yPos - (size / 2)),
+                Point.valueOf(xPos + (size / 3), yPos - (size * 2 / 3)),
+                Point.valueOf(xPos + (size * 1 / 20), yPos - (size / 5)),
+                Point.valueOf(xPos + (size / 3), yPos - (size / 3))
+        };
         
-        int yTop = yPos - size;
-        int yMiddle = yPos - (size / 2);
-        int yOneThird = yPos - (size / 3);
-        int yTwoThirds = yPos - (size * 2 / 3);
-        int yOneFifth = yPos - (size / 5);
-        int yTwoFifth = yPos - (size * 2 / 5);
-        int yThreeFifth = yPos - (size * 3 / 5);
-        int yOneEighth = yPos - (size / 8);
-        int ySevenEighth = yPos - (size * 7 / 8);
-        int yOneTenth = yPos - (size / 10);
-        int yOneNinth = yPos - (size * 19 / 20);
-        int yEightNinth = yPos - (size * 1 / 20);
+        int[] xPosNormal = new int[coordinates.length];
+        int[] yPosNormal = new int[coordinates.length];
         
-        int[] xCoordinatesTree = {xPos, xTwoFifth, xTwoFifth, xThreeFifth, xThreeFifth, xRight, xTwoThirds, xEightNinth, xTwoThirds, xSevenEightth, xMiddle, xOneEightth, xOneThird, xOneNinth, xOneThird};
-        int[] yCoordinatesTree = {yPos, yOneTenth, yPos, yPos, yOneTenth, yPos, yOneThird, yOneFifth, yTwoThirds, yMiddle, yTop, yMiddle, yTwoThirds, yOneFifth, yOneThird};
-
-        int[] xCoordinatesChopped = {xPos, xPos, xTwoThirds, xOneThird};
-        int[] yCoordinatesChopped = {yPos, yTop, yOneThird, yOneNinth,}; 
+        int[] xPosChopped = new int[coordinates.length];
+        int[] yPosChopped = new int[coordinates.length];
         
-        treeShape = new Polygon(xCoordinatesTree, yCoordinatesTree, xCoordinatesTree.length);
-        choppedShape = new Polygon(xCoordinatesChopped, yCoordinatesChopped, xCoordinatesChopped.length);
-       
+        for (int i = 0; i < coordinates.length; i++) {
+            xPosNormal[i] = (int) coordinates[i].xPos();
+            yPosNormal[i] = (int) coordinates[i].yPos();
+            coordinates[i] = coordinates[i].rotateAroundPointBy(Point.valueOf(xPos, yPos), 270);
+            xPosChopped[i] = (int) coordinates[i].xPos();
+            yPosChopped[i] = (int) coordinates[i].yPos();
+        }
+        
+        treeShape = new Polygon(xPosNormal, yPosNormal, coordinates.length);
+        choppedShape = new Polygon(xPosChopped, yPosChopped, coordinates.length);
     }
   
 }

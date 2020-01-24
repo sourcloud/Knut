@@ -10,12 +10,27 @@ public class Star {
     public Star(int xPos, int yPos) {      
         this.xPos = xPos;
         this.yPos = yPos;
-        setStarShape(); 
+        initializeShape(); 
     }
     
-    private void setStarShape() {
-        int[] xCoordinates = {xPos - 5, xPos + 7, xPos - 7, xPos + 5, xPos};
-        int[] yCoordinates = {yPos + 8, yPos, yPos, yPos + 8, yPos - 6};        
+    private void initializeShape() {
+        
+        Point[] coordinates = {
+                Point.valueOf(xPos - 5, yPos + 8),
+                Point.valueOf(xPos + 7, yPos),
+                Point.valueOf(xPos - 7, yPos),
+                Point.valueOf(xPos + 5, yPos + 8),
+                Point.valueOf(xPos, yPos - 6)
+        };
+        
+        int[] xCoordinates = new int[coordinates.length];
+        int[] yCoordinates = new int[coordinates.length];
+        
+        for (int i = 0; i < coordinates.length; i++) {
+            xCoordinates[i] = (int) coordinates[i].xPos();
+            yCoordinates[i] = (int) coordinates[i].yPos();
+        }
+        
         this.starShape = new Polygon(xCoordinates, yCoordinates, xCoordinates.length);
     }
     

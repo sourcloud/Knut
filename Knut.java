@@ -33,11 +33,11 @@ public class Knut extends JPanel implements MouseListener {
             };
 
 	private Tree[] trees = {
-            new Tree(125, 350, 100), 
-            new Tree (250, 300, 75), 
-            new Tree(400, 225, 50), 
-            new Tree(500, 325, 80), 
-            new Tree(650, 225, 25)
+            Tree.valueOf(125, 350, 100), 
+            Tree.valueOf(250, 300, 75), 
+            Tree.valueOf(400, 225, 50), 
+            Tree.valueOf(500, 325, 80), 
+            Tree.valueOf(650, 225, 25)
             };
 
 	/**

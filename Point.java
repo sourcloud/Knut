@@ -9,7 +9,7 @@ public class Point {
         this.yPos = yPos;
     }
     
-    public static Point valueOf(double xPos, double yPos) {
+    public static Point createAtPosition(double xPos, double yPos) {
         return new Point(xPos, yPos);
     }
     
@@ -48,8 +48,7 @@ public class Point {
     public double cross(Point other) {
         return this.xPos * other.yPos - other.xPos * this.yPos;
     }
-    
-    
+       
     public double distanceTo(Point other) {
         return Math.sqrt(Math.pow(this.xPos - other.xPos, 2) 
                        + Math.pow(this.yPos - other.yPos, 2));

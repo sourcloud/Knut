@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
 
@@ -20,12 +21,11 @@ public class Tree {
         initializeShapes();
     }
     
-    public static Tree valueOf(int xPos, int yPos, int size) {
+    public static Tree createAtPositionWithSize(int xPos, int yPos, int size) {
         return new Tree(xPos, yPos, size);
     }
     
-    
-    private int getWeightedRandomDiscount() {
+    private static int getWeightedRandomDiscount() {
         double randomNumber = Math.random();
         return (randomNumber < 0.1) 
                 ? 30 
@@ -55,28 +55,32 @@ public class Tree {
             g.fillPolygon(treeShape);
         else {
             g.fillPolygon(choppedShape);
-            g.drawString(Integer.toString(discount) + "%", xPos, yPos);
+            
+            Color color = g.getColor();
+            g.setColor(Color.black);
+            g.drawString(discount + "%", (xPos + 5), (yPos + 5));
+            g.setColor(color);
         }
     }
     
     private void initializeShapes() {
         
         Point[] coordinates = {
-                Point.valueOf(xPos, yPos),
-                Point.valueOf(xPos + (size * 2 / 5), yPos - (size / 10)),
-                Point.valueOf(xPos + (size * 2 / 5), yPos),
-                Point.valueOf(xPos + (size * 3 / 5), yPos),
-                Point.valueOf(xPos + (size * 3 / 5), yPos - (size / 10)),
-                Point.valueOf(xPos + size, yPos),
-                Point.valueOf(xPos + (size * 2 / 3), yPos - (size / 3)),
-                Point.valueOf(xPos + (size * 19 / 20), yPos - (size / 5)),
-                Point.valueOf(xPos + (size * 2 / 3), yPos - (size * 2 / 3)),       
-                Point.valueOf(xPos + (size * 7 / 8), yPos - (size / 2)),
-                Point.valueOf(xPos + (size / 2), yPos - size),
-                Point.valueOf(xPos + (size * 1 / 8), yPos - (size / 2)),
-                Point.valueOf(xPos + (size / 3), yPos - (size * 2 / 3)),
-                Point.valueOf(xPos + (size * 1 / 20), yPos - (size / 5)),
-                Point.valueOf(xPos + (size / 3), yPos - (size / 3))
+                Point.createAtPosition(xPos, yPos),
+                Point.createAtPosition(xPos + (size * 2 / 5), yPos - (size / 10)),
+                Point.createAtPosition(xPos + (size * 2 / 5), yPos),
+                Point.createAtPosition(xPos + (size * 3 / 5), yPos),
+                Point.createAtPosition(xPos + (size * 3 / 5), yPos - (size / 10)),
+                Point.createAtPosition(xPos + size, yPos),
+                Point.createAtPosition(xPos + (size * 2 / 3), yPos - (size / 3)),
+                Point.createAtPosition(xPos + (size * 19 / 20), yPos - (size / 5)),
+                Point.createAtPosition(xPos + (size * 2 / 3), yPos - (size * 2 / 3)),       
+                Point.createAtPosition(xPos + (size * 7 / 8), yPos - (size / 2)),
+                Point.createAtPosition(xPos + (size / 2), yPos - size),
+                Point.createAtPosition(xPos + (size * 1 / 8), yPos - (size / 2)),
+                Point.createAtPosition(xPos + (size / 3), yPos - (size * 2 / 3)),
+                Point.createAtPosition(xPos + (size * 1 / 20), yPos - (size / 5)),
+                Point.createAtPosition(xPos + (size / 3), yPos - (size / 3))
         };
         
         int[] xPosNormal = new int[coordinates.length];
@@ -88,13 +92,14 @@ public class Tree {
         for (int i = 0; i < coordinates.length; i++) {
             xPosNormal[i] = (int) coordinates[i].xPos();
             yPosNormal[i] = (int) coordinates[i].yPos();
-            coordinates[i] = coordinates[i].rotateAroundPointBy(Point.valueOf(xPos, yPos), 270);
+            coordinates[i] = coordinates[i].rotateAroundPointBy(Point.createAtPosition(xPos, yPos), 270);
             xPosChopped[i] = (int) coordinates[i].xPos();
             yPosChopped[i] = (int) coordinates[i].yPos();
         }
         
         treeShape = new Polygon(xPosNormal, yPosNormal, coordinates.length);
         choppedShape = new Polygon(xPosChopped, yPosChopped, coordinates.length);
+        
     }
   
 }

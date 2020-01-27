@@ -7,14 +7,6 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-/** 
- * Basis-Panel stellt Grundfunktionen fuer den Aufbau interaktiver Anwendungen zur
- * Verfuegung.
- *  
- * Alle Mausereignisse koennen in einzelnen Methoden verarbeitet werden. 
- *  
- * @version 1.0
- */
 public class Knut extends JPanel implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
@@ -22,35 +14,25 @@ public class Knut extends JPanel implements MouseListener {
 	private Moon moon = new Moon(50, 50, 25);
 	
 	private Star[] stars = {
-	        new Star(100, 175), 
-            new Star(200, 50),    
-            new Star(325, 125), 
-            new Star(400, 100), 
-            new Star(475, 125), 
-            new Star(550, 200), 
-            new Star(600, 75), 
-            new Star(650, 150)
+	        Star.createAtPosition(100, 175), 
+            Star.createAtPosition(200, 50),    
+            Star.createAtPosition(325, 125), 
+            Star.createAtPosition(400, 100), 
+            Star.createAtPosition(475, 125), 
+            Star.createAtPosition(550, 200), 
+            Star.createAtPosition(600, 75), 
+            Star.createAtPosition(650, 150)
             };
 
 	private Tree[] trees = {
-            Tree.valueOf(125, 350, 100), 
-            Tree.valueOf(250, 300, 75), 
-            Tree.valueOf(400, 225, 50), 
-            Tree.valueOf(500, 325, 80), 
-            Tree.valueOf(650, 225, 25)
+            Tree.createAtPositionWithSize(100, 375, 100), 
+            Tree.createAtPositionWithSize(225, 300, 75), 
+            Tree.createAtPositionWithSize(375, 275, 50), 
+            Tree.createAtPositionWithSize(475, 350, 80), 
+            Tree.createAtPositionWithSize(625, 250, 35)
             };
-
-	/**
-	 * Initialisierung des Panels und setzen des MouseListerns
-	 * fuer die Verwendung von Maus-Ereignissen
-	 */
 	
 	public Knut() {
-		
-		/* registriert Panel als MouseListener, so dass die jeweilige spezialisierte 
-		 * Methode aufgerufen wird, wenn ein Mausereignis innerhalb des Panels ausgeloest 
-		 * wird
-		 */
 	    
 		this.addMouseListener(this);
 		
@@ -58,26 +40,28 @@ public class Knut extends JPanel implements MouseListener {
 		
 	}
 	
-	/** 
-	 * Zeichnen der Landschaft.
-	 * 
-	 * Umsetzung der Methode
-	 * @see java.awt.Component#paint(java.awt.Graphics)
-	 * 
-	 * @param g Graphik-Kontext, auf dem die Landschaft gezeichnet wird
-	 */
+	private void drawSky(Graphics g) {
+	    g.setColor(moon.isDayTime() ? new Color(150, 230, 230) : Color.darkGray);
+        g.fillRect(0, 0, getWidth(), getHeight() / 2);      
+	}
+	
+	private void drawGround(Graphics g) {
+        g.setColor(moon.isDayTime() ? new Color(65, 220, 110) : new Color(35, 100, 65));
+        g.fillRect(0, getHeight() / 2, getWidth(), getHeight());  
+	}
+	
+	private void drawHorizon(Graphics g) {
+        g.setColor(moon.isDayTime() ? Color.white : Color.black);
+        g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);
+	}
 	
 	public void paint(Graphics g) {
 	    
-		super.paint(g);
-		
-		g.setColor(moon.isDayTime() ? new Color(85, 200, 200) : Color.darkGray);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		
-		g.setColor(Color.white);
-		g.drawLine(0, getHeight()/2, getWidth(), getHeight()/2);
-	
-		//hier wird alles gezeichnet
+		super.paint(g);		
+
+        drawSky(g);
+        drawGround(g);
+        drawHorizon(g);
 		
 		g.setColor(Color.yellow);
 		moon.draw(g);
@@ -86,37 +70,24 @@ public class Knut extends JPanel implements MouseListener {
 		    for (Star star : stars)
 		        star.draw(g);
 		
+		g.setColor(moon.isDayTime() ? new Color(35, 100, 65) : new Color(20, 50, 30));
 		for (Tree tree : trees) {
-		    g.setColor(tree.isChoppedDown() ? Color.black : new Color(60, 40, 10));
 		    tree.draw(g);
 		}
 		
 	}
-	
-	
-	/** 
-	 * Aufloesung der x, y-Position, an der Mausbutton betaetigt wurde.
-	 * 
-	 * Umsetzung der Methode
-	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-	 * 
-	 * @param e Maus-Ereignis, das ausgeloest wurde 
-	 */
 	
 	public void mouseClicked(MouseEvent e) {
 		int xPos, yPos;
 		
 		xPos = e.getX();
 		yPos = e.getY();
-		
-		// hier sollte dann der Maus-Event entsprechend verarbeitet werden
-		
+
 		moon.switchTime(xPos, yPos);
 		
 		for (Tree tree : trees)
 		    tree.chopDown(xPos, yPos);
 
-		// nach jeder Veraenderung soll der Graphik-Kontext neu gezeichnet werden
 		this.repaint();
 	}
 	

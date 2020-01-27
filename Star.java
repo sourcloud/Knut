@@ -3,24 +3,32 @@ import java.awt.Polygon;
 
 public class Star {
     
-    private int xPos;
-    private int yPos;
-    private Polygon starShape;
+    private final Polygon shape;
+    private final int xPos;
+    private final int yPos;
  
-    public Star(int xPos, int yPos) {      
+    private Star(int xPos, int yPos) {      
         this.xPos = xPos;
         this.yPos = yPos;
-        initializeShape(); 
+        this.shape = createShape(); 
     }
     
-    private void initializeShape() {
+    public static Star createAtPosition(int xPos, int yPos) {
+        return new Star(xPos, yPos);
+    }
+    
+    public void draw(Graphics g) {
+        g.drawPolygon(shape);
+    }
+    
+    private Polygon createShape() {
         
         Point[] coordinates = {
-                Point.valueOf(xPos - 5, yPos + 8),
-                Point.valueOf(xPos + 7, yPos),
-                Point.valueOf(xPos - 7, yPos),
-                Point.valueOf(xPos + 5, yPos + 8),
-                Point.valueOf(xPos, yPos - 6)
+                Point.createAtPosition(xPos - 5, yPos + 8),
+                Point.createAtPosition(xPos + 7, yPos),
+                Point.createAtPosition(xPos - 7, yPos),
+                Point.createAtPosition(xPos + 5, yPos + 8),
+                Point.createAtPosition(xPos, yPos - 6)
         };
         
         int[] xCoordinates = new int[coordinates.length];
@@ -31,11 +39,8 @@ public class Star {
             yCoordinates[i] = (int) coordinates[i].yPos();
         }
         
-        this.starShape = new Polygon(xCoordinates, yCoordinates, xCoordinates.length);
+        return new Polygon(xCoordinates, yCoordinates, coordinates.length);
     }
     
-    public void draw(Graphics g) {
-        g.drawPolygon(starShape);
-    }
     
 }

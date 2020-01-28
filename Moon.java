@@ -1,4 +1,5 @@
-import java.awt.Graphics;
+package knut;
+import java.awt.Graphics2D;
 
 public class Moon {
 
@@ -7,30 +8,36 @@ public class Moon {
     private final int radius;
     private boolean dayTime;
     
-    public Moon(int xPos, int yPos, int radius) {
+    private Moon(int xPos, int yPos, int radius) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.radius = radius;   
         this.dayTime = true;
     }
     
-    public boolean isDayTime() {
-        return dayTime;
+    public static Moon createAtPositionWithRadius(int xPos, int yPos, int radius) {
+        return new Moon(xPos, yPos, radius);
+    }
+    
+    public boolean isShining() {
+        return !dayTime;
     }
     
     public boolean switchTime(int xPos, int yPos) {
-        int diameter = 2 * radius;
-        boolean isClicked = (xPos - this.xPos >= 0 && xPos - this.xPos <= diameter && yPos - this.yPos >= 0 && yPos - this.yPos <= diameter);
+        Point centerPoint = Point.createAtPosition(this.xPos, this.yPos);
+        Point clickPoint = Point.createAtPosition(xPos, yPos);
+        
+        boolean isClicked = (centerPoint.distanceTo(clickPoint) <= radius);
         if (isClicked)
             dayTime = !dayTime;
         return isClicked;
     }
     
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g2d) {
         int diameter = 2 * radius;
         if (dayTime)
-            g.drawOval(xPos, yPos, diameter, diameter);
+            g2d.drawOval(xPos - radius, yPos - radius, diameter, diameter);     // circle with center at (xPos, yPos)
         else
-            g.fillOval(xPos, yPos, diameter, diameter);
+            g2d.fillOval(xPos - radius, yPos - radius, diameter, diameter);
     }
 }

@@ -1,5 +1,6 @@
+package knut;
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Polygon;
 
 public class Tree {
@@ -8,9 +9,10 @@ public class Tree {
     private final int yPos;
     private final int size;
     private final int discount;
-    private boolean isChoppedDown;
+    
     private Polygon treeShape;
     private Polygon choppedShape;
+    private boolean isChoppedDown;
     
     private Tree(int xPos, int yPos, int size) {
         this.xPos = xPos;
@@ -21,24 +23,28 @@ public class Tree {
         initializeShapes();
     }
     
+    private Tree(int xPos, int yPos, int size, int discount) {
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.size = size;
+        this.discount = discount;
+        this.isChoppedDown = false;
+        initializeShapes();
+    }
+    
     public static Tree createAtPositionWithSize(int xPos, int yPos, int size) {
         return new Tree(xPos, yPos, size);
     }
     
-    private static int getWeightedRandomDiscount() {
-        double randomNumber = Math.random();
-        return (randomNumber < 0.1) 
-                ? 30 
-                : (randomNumber < 0.2) 
-                    ? 25 
-                    : (randomNumber < 0.3) 
-                        ? 20 
-                        : (randomNumber < 0.5)
-                            ? 15
-                            : (randomNumber < 0.7)
-                                ? 10
-                                : 5;
+    public static Tree createAtPositionWithSizeAndDiscount(int xPos, int yPos, int size, int discount) {
+        if (discount > 0 && discount <= 30 && discount % 5 == 0)
+            return new Tree(xPos, yPos, size, discount);
+        else {
+            System.out.println("Oops, illegal discount detected! It will be chosen randomly!");
+            return new Tree(xPos, yPos, size);
+        }
     }
+    
     
     public boolean isChoppedDown() {
         return isChoppedDown;
@@ -50,18 +56,19 @@ public class Tree {
         return isChoppedDown;
     }
     
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g2d) {
+        
         if (!isChoppedDown)
-            g.fillPolygon(treeShape);
+            g2d.fillPolygon(treeShape);
         else {
-            g.fillPolygon(choppedShape);
-            
-            Color color = g.getColor();
-            g.setColor(Color.black);
-            g.drawString(discount + "%", (xPos + 5), (yPos + 5));
-            g.setColor(color);
+            Color tempColor = g2d.getColor();
+            g2d.fillPolygon(choppedShape);              
+            g2d.setColor(Color.black);
+            g2d.drawString(discount + "%", (xPos + 5), (yPos + 5));
+            g2d.setColor(tempColor);
         }
     }
+    
     
     private void initializeShapes() {
         
@@ -90,16 +97,31 @@ public class Tree {
         int[] yPosChopped = new int[coordinates.length];
         
         for (int i = 0; i < coordinates.length; i++) {
-            xPosNormal[i] = (int) coordinates[i].xPos();
-            yPosNormal[i] = (int) coordinates[i].yPos();
-            coordinates[i] = coordinates[i].rotateAroundPointBy(Point.createAtPosition(xPos, yPos), 270);
-            xPosChopped[i] = (int) coordinates[i].xPos();
-            yPosChopped[i] = (int) coordinates[i].yPos();
+            xPosNormal[i] = (int) coordinates[i].getX();
+            yPosNormal[i] = (int) coordinates[i].getY();
+            coordinates[i] = coordinates[i].rotateAroundPointBy(coordinates[0], -90);
+            xPosChopped[i] = (int) coordinates[i].getX();
+            yPosChopped[i] = (int) coordinates[i].getY();
         }
         
         treeShape = new Polygon(xPosNormal, yPosNormal, coordinates.length);
         choppedShape = new Polygon(xPosChopped, yPosChopped, coordinates.length);
         
+    }
+    
+    private static int getWeightedRandomDiscount() {
+        double randomNumber = Math.random();
+        return (randomNumber < 0.1) 
+                        ? 30 
+                        : (randomNumber < 0.2) 
+                            ? 25 
+                            : (randomNumber < 0.3) 
+                                ? 20 
+                                : (randomNumber < 0.5)
+                                    ? 15
+                                    : (randomNumber < 0.7)
+                                        ? 10
+                                        : 5;
     }
   
 }

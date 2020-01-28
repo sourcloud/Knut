@@ -1,3 +1,4 @@
+package knut;
 import javax.swing.JFrame;
 
 public class KnutApp {

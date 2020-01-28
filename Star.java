@@ -1,27 +1,29 @@
-import java.awt.Graphics;
+package knut;
+import java.awt.Graphics2D;
 import java.awt.Polygon;
 
 public class Star {
     
-    private final Polygon shape;
     private final int xPos;
     private final int yPos;
+    
+    private Polygon shape;
  
     private Star(int xPos, int yPos) {      
         this.xPos = xPos;
         this.yPos = yPos;
-        this.shape = createShape(); 
+        this.shape = initializeShape(); 
     }
     
     public static Star createAtPosition(int xPos, int yPos) {
         return new Star(xPos, yPos);
     }
     
-    public void draw(Graphics g) {
-        g.drawPolygon(shape);
+    public void draw(Graphics2D g2d) {
+        g2d.drawPolygon(shape);
     }
     
-    private Polygon createShape() {
+    private Polygon initializeShape() {
         
         Point[] coordinates = {
                 Point.createAtPosition(xPos - 5, yPos + 8),
@@ -35,8 +37,8 @@ public class Star {
         int[] yCoordinates = new int[coordinates.length];
         
         for (int i = 0; i < coordinates.length; i++) {
-            xCoordinates[i] = (int) coordinates[i].xPos();
-            yCoordinates[i] = (int) coordinates[i].yPos();
+            xCoordinates[i] = (int) coordinates[i].getX();
+            yCoordinates[i] = (int) coordinates[i].getY();
         }
         
         return new Polygon(xCoordinates, yCoordinates, coordinates.length);

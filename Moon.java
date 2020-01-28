@@ -1,5 +1,7 @@
 package knut;
-import java.awt.Graphics2D;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class Moon {
 
@@ -7,12 +9,33 @@ public class Moon {
     private final int yPos;
     private final int radius;
     private boolean dayTime;
+
+    /* --- Event --- */
+    // Eventvorlage / Rufvorlage
+    // (knut.MoonDayNightListener)
+
+    // Angewendete EventListener
+    private List<MoonDayNightListener> applyedListeners;
+
+    private void triggerEventDayNight() {
+        // Durchlaufe alle wartende Listeners
+        for (MoonDayNightListener listener : this.applyedListeners)
+            listener.onChange(this.dayTime);
+    }
+
+
+    public void addDayNightListener(MoonDayNightListener toAddListener) {
+        this.applyedListeners.add(toAddListener);
+    }
+
+    /* ---- ---- */
     
     private Moon(int xPos, int yPos, int radius) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.radius = radius;   
         this.dayTime = true;
+        this.applyedListeners = new ArrayList();
     }
     
     public static Moon createAtPositionWithRadius(int xPos, int yPos, int radius) {
@@ -22,22 +45,35 @@ public class Moon {
     public boolean isShining() {
         return !dayTime;
     }
-    
-    public boolean switchTime(int xPos, int yPos) {
+
+    //public boolean switchTime(int xPos, int yPos) {
+    public boolean g2dClick(int xPos, int yPos) {
         Point centerPoint = Point.createAtPosition(this.xPos, this.yPos);
         Point clickPoint = Point.createAtPosition(xPos, yPos);
         
         boolean isClicked = (centerPoint.distanceTo(clickPoint) <= radius);
         if (isClicked)
             dayTime = !dayTime;
+            this.triggerEventDayNight(); // Trigger Repain @Knut
+
         return isClicked;
     }
     
     public void draw(Graphics2D g2d) {
-        int diameter = 2 * radius;
-        if (dayTime)
-            g2d.drawOval(xPos - radius, yPos - radius, diameter, diameter);     // circle with center at (xPos, yPos)
-        else
-            g2d.fillOval(xPos - radius, yPos - radius, diameter, diameter);
+        int diameter = 2 * radius,
+            objDrawPointX = xPos - radius,
+            objDrawPointY = yPos - radius;
+
+        Color backgroundColor;
+
+        if (dayTime) {
+            backgroundColor = new Color(35, 100, 65);
+            g2d.drawOval(objDrawPointX, objDrawPointY, diameter, diameter);     // circle with center at (xPos, yPos)
+        } else {
+            backgroundColor = new Color(20, 50, 30);
+            g2d.fillOval(objDrawPointX, objDrawPointY, diameter, diameter);
+        }
+
+        g2d.setColor(backgroundColor);
     }
 }

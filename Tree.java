@@ -1,7 +1,6 @@
 package knut;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
+import java.awt.*;
+import java.util.*;
 
 public class Tree {
 
@@ -13,6 +12,57 @@ public class Tree {
     private Polygon treeShape;
     private Polygon choppedShape;
     private boolean isChoppedDown;
+
+/* --- Statics --- */
+
+    public static Tree[] instanceMemoryList;
+
+    public static void setTreeCount(int count) {
+        instanceMemoryList = new Tree[5];/*(count);
+
+        for(int iRandomTree = 0; iRandomTree < count; iRandomTree++) {
+            this.instanceMemoryList[iRandomTree] = new Tree(...);
+        }
+
+        @ToDo - Statische Variante zu dynamisch Random umschreiben...
+        */
+        instanceMemoryList[0] = Tree.createAtPositionWithSize(100, 375, 100);
+        instanceMemoryList[1] = Tree.createAtPositionWithSize(225, 300, 75);
+        instanceMemoryList[2] = Tree.createAtPositionWithSize(375, 275, 50);
+        instanceMemoryList[3] = Tree.createAtPositionWithSize(475, 350, 80);
+        instanceMemoryList[4] = Tree.createAtPositionWithSize(625, 250, 35);
+    }
+
+    public static Tree getHoveredTree(int xPos, int yPos) {
+        Tree outputTree = null;
+
+        //for (Tree curTree : this.trees) {
+        for (Tree curTree : instanceMemoryList) {
+
+            if (curTree.pointInObjectBounds(xPos, yPos)) {
+                outputTree = curTree;
+
+                break;
+            }
+        }
+
+        return outputTree;
+    }
+
+    public static Tree createAtPositionWithSize(int xPos, int yPos, int size) {
+        return new Tree(xPos, yPos, size);
+    }
+
+    public static Tree createAtPositionWithSizeAndDiscount(int xPos, int yPos, int size, int discount) {
+        if (discount > 0 && discount <= 30 && discount % 5 == 0)
+            return new Tree(xPos, yPos, size, discount);
+        else {
+            System.out.println("Oops, illegal discount detected! It will be chosen randomly!");
+            return new Tree(xPos, yPos, size);
+        }
+    }
+
+/* --- Statics - End --- */
     
     private Tree(int xPos, int yPos, int size) {
         this.xPos = xPos;
@@ -32,22 +82,13 @@ public class Tree {
         initializeShapes();
     }
     
-    public static Tree createAtPositionWithSize(int xPos, int yPos, int size) {
-        return new Tree(xPos, yPos, size);
-    }
-    
-    public static Tree createAtPositionWithSizeAndDiscount(int xPos, int yPos, int size, int discount) {
-        if (discount > 0 && discount <= 30 && discount % 5 == 0)
-            return new Tree(xPos, yPos, size, discount);
-        else {
-            System.out.println("Oops, illegal discount detected! It will be chosen randomly!");
-            return new Tree(xPos, yPos, size);
-        }
-    }
-    
     
     public boolean isChoppedDown() {
         return isChoppedDown;
+    }
+
+    public boolean pointInObjectBounds(int xPos, int yPos) {
+        return treeShape.contains(xPos, yPos);
     }
     
     public boolean chopDown(int xPos, int yPos) {

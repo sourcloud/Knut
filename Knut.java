@@ -1,4 +1,6 @@
 package knut;
+import knut.Tree;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,21 +15,28 @@ public class Knut extends JPanel implements MouseListener {
 	
 	private Moon moon;	
 	private Star[] stars;
-	private Tree[] trees;
+	//private Tree[] trees;
 	
 	public Knut() {
-	    
+		Knut self = this;
 		this.addMouseListener(this);
 		
 		this.moon = Moon.createAtPositionWithRadius(75, 75, 25);
+		this.moon.addDayNightListener(new MoonDayNightListener() {
+			@Override
+			public void onChange(boolean newDayNightState) {
+				self.repaint();
+			}
+		});
 		
-		this.trees = new Tree[] {
+		/*this.trees = new Tree[] {
 	            Tree.createAtPositionWithSize(100, 375, 100), 
 	            Tree.createAtPositionWithSize(225, 300, 75), 
 	            Tree.createAtPositionWithSize(375, 275, 50), 
 	            Tree.createAtPositionWithSize(475, 350, 80), 
 	            Tree.createAtPositionWithSize(625, 250, 35)
-        };
+        };*/
+		Tree.setTreeCount(6);
 		
 		this.stars = new Star[] {
 	            Star.createAtPosition(100, 175), 
@@ -56,12 +65,14 @@ public class Knut extends JPanel implements MouseListener {
 		g2d.setColor(Color.yellow);
 		moon.draw(g2d);
 		
-		if (moon.isShining())
+		/*if (moon.isShining())
 		    for (Star star : stars)
 		        star.draw(g2d);
 		
-		g2d.setColor(moon.isShining() ? new Color(20, 50, 30) : new Color(35, 100, 65));
-		for (Tree tree : trees)
+		g2d.setColor(moon.isShining()	 ? new Color(20, 50, 30) : new Color(35, 100, 65));*/
+
+		//for (Tree tree : trees)
+		for (Tree tree : Tree.instanceMemoryList)
 		    tree.draw(g2d);
 		
 	}
@@ -71,12 +82,24 @@ public class Knut extends JPanel implements MouseListener {
 		int xPos = e.getX();
 		int yPos = e.getY();
 
-		moon.switchTime(xPos, yPos);
-		
-		for (Tree tree : trees)
-		    tree.chopDown(xPos, yPos);
+		// Leite klick Event an Childs weiter...
+		moon.g2dClick(xPos, yPos);
+		//moon.switchTime(xPos, yPos);
+
+		Tree hoveredTree = Tree.getHoveredTree(xPos, yPos);
+		// #for (Tree tree : trees)
+		// #    tree.chopDown(xPos, yPos);
+
+		// Wenn Tree != null
+		if (hoveredTree != null) {
+			hoveredTree.chopDown(xPos, yPos);
+		}
 
 		this.repaint();
+	}
+
+	public boolean objectInBounds(int xPos, int yPos) {
+		return false;
 	}
 	
 	/** Faengt Mouse-Event ab, ohne ihn weiter zu verarbeiten

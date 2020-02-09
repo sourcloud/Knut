@@ -1,5 +1,4 @@
 package knut;
-<<<<<<< HEAD
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -94,33 +93,6 @@ public class Star implements Observer {
      * a polygon out of them.
      */
     private void initializeShape() {
-=======
-import java.awt.Graphics2D;
-import java.awt.Polygon;
-
-public class Star {
-    
-    private final int xPos;
-    private final int yPos;
-    
-    private Polygon shape;
- 
-    private Star(int xPos, int yPos) {      
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.shape = initializeShape(); 
-    }
-    
-    public static Star createAtPosition(int xPos, int yPos) {
-        return new Star(xPos, yPos);
-    }
-    
-    public void draw(Graphics2D g2d) {
-        g2d.drawPolygon(shape);
-    }
-    
-    private Polygon initializeShape() {
->>>>>>> bc86e3fbc8d55be6747035d3eee1feb9002d2c2d
         
         Point[] coordinates = {
                 Point.createAtPosition(xPos - 5, yPos + 8),
@@ -138,7 +110,6 @@ public class Star {
             yCoordinates[i] = (int) coordinates[i].getY();
         }
         
-<<<<<<< HEAD
         this.shape = new Polygon(xCoordinates, yCoordinates, coordinates.length);
     }
 
@@ -155,9 +126,6 @@ public class Star {
     @Override
     public void unsubscribe(Subject s) {
         s.removeObserver(this);
-=======
-        return new Polygon(xCoordinates, yCoordinates, coordinates.length);
->>>>>>> bc86e3fbc8d55be6747035d3eee1feb9002d2c2d
     }
     
     

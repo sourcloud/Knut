@@ -1,4 +1,5 @@
 package knut;
+<<<<<<< HEAD
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -18,11 +19,19 @@ public class Tree implements Observer{
     /**
      * Int values representing position, size and discount of a tree.
      */
+=======
+import java.awt.*;
+import java.util.*;
+
+public class Tree {
+
+>>>>>>> bc86e3fbc8d55be6747035d3eee1feb9002d2c2d
     private final int xPos;
     private final int yPos;
     private final int size;
     private final int discount;
     
+<<<<<<< HEAD
     /**
      * Color to draw tree with. Is the same for all instances.
      */
@@ -128,6 +137,110 @@ public class Tree implements Observer{
      * and making a polygon of them. Chopped shape is initialized by turning the
      * points around starting point by 90 degrees to the left.
      */
+=======
+    private Polygon treeShape;
+    private Polygon choppedShape;
+    private boolean isChoppedDown;
+
+/* --- Statics --- */
+
+    public static Tree[] instanceMemoryList;
+
+    public static void setTreeCount(int count) {
+        instanceMemoryList = new Tree[5];/*(count);
+
+        for(int iRandomTree = 0; iRandomTree < count; iRandomTree++) {
+            this.instanceMemoryList[iRandomTree] = new Tree(...);
+        }
+
+        @ToDo - Statische Variante zu dynamisch Random umschreiben...
+        */
+        instanceMemoryList[0] = Tree.createAtPositionWithSize(100, 375, 100);
+        instanceMemoryList[1] = Tree.createAtPositionWithSize(225, 300, 75);
+        instanceMemoryList[2] = Tree.createAtPositionWithSize(375, 275, 50);
+        instanceMemoryList[3] = Tree.createAtPositionWithSize(475, 350, 80);
+        instanceMemoryList[4] = Tree.createAtPositionWithSize(625, 250, 35);
+    }
+
+    public static Tree getHoveredTree(int xPos, int yPos) {
+        Tree outputTree = null;
+
+        //for (Tree curTree : this.trees) {
+        for (Tree curTree : instanceMemoryList) {
+
+            if (curTree.pointInObjectBounds(xPos, yPos)) {
+                outputTree = curTree;
+
+                break;
+            }
+        }
+
+        return outputTree;
+    }
+
+    public static Tree createAtPositionWithSize(int xPos, int yPos, int size) {
+        return new Tree(xPos, yPos, size);
+    }
+
+    public static Tree createAtPositionWithSizeAndDiscount(int xPos, int yPos, int size, int discount) {
+        if (discount > 0 && discount <= 30 && discount % 5 == 0)
+            return new Tree(xPos, yPos, size, discount);
+        else {
+            System.out.println("Oops, illegal discount detected! It will be chosen randomly!");
+            return new Tree(xPos, yPos, size);
+        }
+    }
+
+/* --- Statics - End --- */
+    
+    private Tree(int xPos, int yPos, int size) {
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.size = size;
+        this.discount = getWeightedRandomDiscount();
+        this.isChoppedDown = false;
+        initializeShapes();
+    }
+    
+    private Tree(int xPos, int yPos, int size, int discount) {
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.size = size;
+        this.discount = discount;
+        this.isChoppedDown = false;
+        initializeShapes();
+    }
+    
+    
+    public boolean isChoppedDown() {
+        return isChoppedDown;
+    }
+
+    public boolean pointInObjectBounds(int xPos, int yPos) {
+        return treeShape.contains(xPos, yPos);
+    }
+    
+    public boolean chopDown(int xPos, int yPos) {
+        if (treeShape.contains(xPos, yPos))
+            isChoppedDown = true;
+        return isChoppedDown;
+    }
+    
+    public void draw(Graphics2D g2d) {
+        
+        if (!isChoppedDown)
+            g2d.fillPolygon(treeShape);
+        else {
+            Color tempColor = g2d.getColor();
+            g2d.fillPolygon(choppedShape);              
+            g2d.setColor(Color.black);
+            g2d.drawString(discount + "%", (xPos + 5), (yPos + 5));
+            g2d.setColor(tempColor);
+        }
+    }
+    
+    
+>>>>>>> bc86e3fbc8d55be6747035d3eee1feb9002d2c2d
     private void initializeShapes() {
         
         Point[] coordinates = {
@@ -154,7 +267,11 @@ public class Tree implements Observer{
         int[] xPosChopped = new int[coordinates.length];
         int[] yPosChopped = new int[coordinates.length];
         
+<<<<<<< HEAD
         for (int i = 0; i < coordinates.length; i++) {      // scale and extract coordinates, turn, extract turned coordinates
+=======
+        for (int i = 0; i < coordinates.length; i++) {
+>>>>>>> bc86e3fbc8d55be6747035d3eee1feb9002d2c2d
             xPosNormal[i] = (int) coordinates[i].getX();
             yPosNormal[i] = (int) coordinates[i].getY();
             coordinates[i] = coordinates[i].rotateAroundPointBy(coordinates[0], -90);
@@ -167,6 +284,7 @@ public class Tree implements Observer{
         
     }
     
+<<<<<<< HEAD
     /**
      * Chooses a valid random discount value.
      * 
@@ -202,6 +320,21 @@ public class Tree implements Observer{
     @Override
     public void unsubscribe(Subject s) {
         s.removeObserver(this);
+=======
+    private static int getWeightedRandomDiscount() {
+        double randomNumber = Math.random();
+        return (randomNumber < 0.1) 
+                        ? 30 
+                        : (randomNumber < 0.2) 
+                            ? 25 
+                            : (randomNumber < 0.3) 
+                                ? 20 
+                                : (randomNumber < 0.5)
+                                    ? 15
+                                    : (randomNumber < 0.7)
+                                        ? 10
+                                        : 5;
+>>>>>>> bc86e3fbc8d55be6747035d3eee1feb9002d2c2d
     }
   
 }

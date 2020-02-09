@@ -1,11 +1,17 @@
 package knut;
+<<<<<<< HEAD
 
+=======
+>>>>>>> bc86e3fbc8d55be6747035d3eee1feb9002d2c2d
 /**
  * Class that stores two double values representing a point in R².
  * 
  * Point class provides immutable Objects representing points in a two-dimensional 
  * coordinate system, equipped with basic linear algebra functionality.
+<<<<<<< HEAD
  * 
+=======
+>>>>>>> bc86e3fbc8d55be6747035d3eee1feb9002d2c2d
  */
 public class Point {
 	
@@ -151,9 +157,12 @@ public class Point {
     /**
      * Calculates length of Point.
      * 
+<<<<<<< HEAD
      * Calculates length of this by using Pythagorean theorem. Length is the representation of distance between
      * a point and origin of coordinate system.
      * 
+=======
+>>>>>>> bc86e3fbc8d55be6747035d3eee1feb9002d2c2d
      * @return A double representing the length of this Point.
      */    
     public double length() {
@@ -172,7 +181,11 @@ public class Point {
         return this.minus(other).length();
     }
     
+<<<<<<< HEAD
     @Override 
+=======
+    @Override
+>>>>>>> bc86e3fbc8d55be6747035d3eee1feb9002d2c2d
     public boolean equals(Object other) {
         if (other == this)
             return true;
